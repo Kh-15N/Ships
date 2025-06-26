@@ -1,0 +1,87 @@
+[gd_scene load_steps=6 format=3 uid="uid://cx2qyn02ald5p"]
+
+[ext_resource type="Script" path="res://player.gd" id="1_k3eb7"]
+[ext_resource type="Script" path="res://action_panel.gd" id="2_8ip1l"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_dlat2"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_prxkq"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_a0nhw"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("Camera3D:rotation")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+
+[node name="Player" type="CharacterBody3D"]
+collision_layer = 2
+script = ExtResource("1_k3eb7")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.20759, 0)
+mesh = SubResource("CapsuleMesh_dlat2")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2007, 0)
+shape = SubResource("CapsuleShape3D_prxkq")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.665843, 0.746092, 0, -0.746092, 0.665843, 0, 1.85695, 0)
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_a0nhw")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="ActionPanel" type="PanelContainer" parent="CanvasLayer"]
+anchors_preset = -1
+anchor_left = 0.698
+anchor_top = 0.685
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.09601
+offset_top = -3.88004
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 1
+script = ExtResource("2_8ip1l")
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/ActionPanel"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/ActionPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 50
+
+[node name="OptionButton" type="OptionButton" parent="CanvasLayer/ActionPanel/MarginContainer/VBoxContainer"]
+visibility_layer = 2
+layout_mode = 2
+mouse_filter = 1
+flat = true
+item_count = 3
+popup/item_0/text = "Эсминец"
+popup/item_1/text = "Крейсер"
+popup/item_1/id = 1
+popup/item_2/text = "Линейный крейсер"
+popup/item_2/id = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/ActionPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/line_spacing = -12
+text = "^   ^
+(UwU)"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="CanvasLayer/ActionPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Закончить ход"
+
+[connection signal="mouse_entered" from="CanvasLayer/ActionPanel" to="." method="_on_action_panel_mouse_entered"]
+[connection signal="mouse_exited" from="CanvasLayer/ActionPanel" to="." method="_on_action_panel_mouse_exited"]
+[connection signal="item_selected" from="CanvasLayer/ActionPanel/MarginContainer/VBoxContainer/OptionButton" to="." method="_on_option_button_item_selected"]
+[connection signal="pressed" from="CanvasLayer/ActionPanel/MarginContainer/VBoxContainer/Button" to="." method="_on_button_pressed"]
