@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://cx2qyn02ald5p"]
+[gd_scene load_steps=7 format=3 uid="uid://cx2qyn02ald5p"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_k3eb7"]
 [ext_resource type="Script" path="res://action_panel.gd" id="2_8ip1l"]
+[ext_resource type="Texture2D" uid="uid://bvgt1aqp6hg4j" path="res://icon.svg" id="3_k8nki"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_dlat2"]
 
@@ -56,13 +57,24 @@ layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/ActionPanel/MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 50
+theme_override_constants/separation = 30
+
+[node name="Label2" type="Label" parent="CanvasLayer/ActionPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/line_spacing = -10
+text = "Создать корабль (жми ниже)"
+horizontal_alignment = 1
 
 [node name="OptionButton" type="OptionButton" parent="CanvasLayer/ActionPanel/MarginContainer/VBoxContainer"]
 visibility_layer = 2
 layout_mode = 2
 mouse_filter = 1
+theme_override_colors/icon_normal_color = Color(0, 0.654902, 0, 1)
+theme_override_colors/icon_focus_color = Color(0.21883, 0.605823, 0.302236, 1)
+theme_override_icons/icon = ExtResource("3_k8nki")
 flat = true
+icon_alignment = 1
+expand_icon = true
 item_count = 3
 popup/item_0/text = "Эсминец"
 popup/item_1/text = "Крейсер"

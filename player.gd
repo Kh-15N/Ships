@@ -17,7 +17,7 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	if not is_multiplayer_authority(): return
-	Input.mouse_mode = Input.MOUSE_MODE_CONFINED
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	camera.current = true
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -35,6 +35,9 @@ func _physics_process(delta: float) -> void:
 	
 	if Input.is_action_just_pressed("Alt"):
 		alt = (int(alt) + 1) % 2
+		if alt:
+			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		else: Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		
 
 	if Input.is_action_just_pressed("click") and raycast_permition:

@@ -54,6 +54,7 @@ func _on_host_button_pressed() -> void:
 	enet_peer.create_server(PORT)
 	multiplayer.multiplayer_peer = enet_peer
 	multiplayer.peer_connected.connect(add_player.rpc)
+	multiplayer.peer_connected.disconnect(remove_player)
 	add_player(multiplayer.get_unique_id())
 	
 
@@ -71,6 +72,11 @@ func add_player(peer_id):
 	player.position = $Players.position
 	if not multiplayer.is_server():
 		spawn_objects_request.rpc_id(1, multiplayer.get_unique_id())
+
+func remove_player(peer_id):
+	var player = get_node_or_null(str(peer_id))
+	if player:
+		player.queue_free()
 
 @rpc("any_peer", "call_remote")
 func spawn_objects_request(self_id):
@@ -144,7 +150,14 @@ func attack(attacker_index, target_index):
 		target.hp -= attacker.damage
 		attacker.ready_to_fire = false
 		if target.hp <= 0:
-			print("target destroed")
+			destroy_ship.rpc(target_index)
+
+@rpc("any_peer", "call_local")
+func destroy_ship(ship_index):
+	var ship = ships.pop_at(ship_index)
+	ship.queue_free()
+	print("target destroed")
+
 
 @rpc("any_peer", "call_local")
 func start_game():

@@ -1,13 +1,18 @@
-[gd_scene load_steps=7 format=3 uid="uid://q7m2qqjlrico"]
+[gd_scene load_steps=8 format=3 uid="uid://q7m2qqjlrico"]
 
 [ext_resource type="Script" path="res://fu_test.gd" id="1_hdrd3"]
 [ext_resource type="PackedScene" uid="uid://ch8cdiyf5fipo" path="res://hex_scene.tscn" id="2_je7og"]
-[ext_resource type="Material" path="res://green.tres" id="2_q4k1m"]
-[ext_resource type="Material" path="res://water.tres" id="3_fb0nl"]
+[ext_resource type="Material" uid="uid://dmhv3mq6xsxyi" path="res://green.tres" id="2_q4k1m"]
+[ext_resource type="Material" uid="uid://c1mkf4wsgf0sx" path="res://water.tres" id="3_fb0nl"]
 [ext_resource type="PackedScene" uid="uid://8r52mau04p63" path="res://ship.tscn" id="3_khfok"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_7d3tr"]
 size = Vector2(10, 10)
+
+[sub_resource type="Environment" id="Environment_jfkpv"]
+ambient_light_source = 3
+ambient_light_color = Color(0.925777, 0.847654, 0.805484, 1)
+ambient_light_energy = 3.69
 
 [node name="World" type="Node"]
 script = ExtResource("1_hdrd3")
@@ -21,7 +26,10 @@ size = 100
 mesh = SubResource("PlaneMesh_7d3tr")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -0.0719848, 0.997406, 0, -0.997406, -0.0719848, 0, 14.7025, 0)
+transform = Transform3D(1, 0, 0, 0, -0.0719848, 0.997406, 0, -0.997406, -0.0719848, -0.0213585, 14.7025, 0.0643902)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_jfkpv")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -105,6 +113,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 10, 10)
 
 [node name="Hex_scene" parent="." instance=ExtResource("2_je7og")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.32007, 0, -9.01858)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.0308176, 0.999525, 0, -0.999525, 0.0308176, -220.654, 29.4238, 104.796)
+light_energy = 5.3
 
 [connection signal="pressed" from="CanvasLayer/MainMenu/MarginContainer/VBoxContainer/HostButton" to="." method="_on_host_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/MarginContainer/VBoxContainer/JoinButton" to="." method="_on_join_button_pressed"]
