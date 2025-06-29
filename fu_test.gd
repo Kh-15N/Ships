@@ -42,6 +42,7 @@ func gen_hex_field():
 			hex.field_coordinates = Vector2(x, z)
 			hex_size = hex.mesh.get_aabb().size
 			hex_list.append(hex)
+			hex.set_index_in_hex_list(hex_list.size() - 1)
 			add_child(hex)
 			hex.position = Vector3(
 				(hex_size.x / 2) * (z % 2) - hex_size.x * x,
@@ -54,12 +55,14 @@ func _on_host_button_pressed() -> void:
 	enet_peer.create_server(PORT)
 	multiplayer.multiplayer_peer = enet_peer
 	multiplayer.peer_connected.connect(add_player.rpc)
+	multiplayer.peer_connected.disconnect(remove_player)
 	add_player(multiplayer.get_unique_id())
+	
 	
 
 func _on_join_button_pressed() -> void:
 	main_menu.hide()
-	enet_peer.create_client("localhost", PORT)
+	enet_peer.create_client(address_entry.text, PORT)
 	multiplayer.multiplayer_peer = enet_peer
 
 @rpc("any_peer", "call_local")
@@ -71,6 +74,11 @@ func add_player(peer_id):
 	player.position = $Players.position
 	if not multiplayer.is_server():
 		spawn_objects_request.rpc_id(1, multiplayer.get_unique_id())
+
+func remove_player(peer_id):
+	var player = get_node_or_null(str(peer_id))
+	if player:
+		player.queue_free()
 
 @rpc("any_peer", "call_remote")
 func spawn_objects_request(self_id):
@@ -95,7 +103,8 @@ func create_ship(hex_index, type, team):
 	# нужно будет сделать выбор типа
 	add_child(ship)
 	ship.set_team_color.rpc()
-	ship.position = hex_list[hex_index].position
+	ship.position = hex_list[hex_index].position + Vector3.UP / 8
+	
 
 @rpc("authority", "call_remote")
 func replikate_ship(ship_image_properties: Dictionary, ship_image_transform):
@@ -122,12 +131,12 @@ func tell_about_players(spawned_players):
 	##CanvasLayer/ActionPanel/MarginContainer/VBoxContainer/Label
 
 @rpc("any_peer", "call_local")
-func move_ship(ship_index, new_position):
+func move_ship(ship_index, hex_index):
 	if game_started and multiplayer.get_remote_sender_id() != players[turn]:
 		return
 	if multiplayer.get_remote_sender_id() != ships[ship_index].team:
 		return
-	ships[ship_index].move(new_position)
+	ships[ship_index].move(hex_list[hex_index].position)
 
 @rpc("any_peer", "call_local")
 func attack(attacker_index, target_index):
@@ -144,7 +153,15 @@ func attack(attacker_index, target_index):
 		target.hp -= attacker.damage
 		attacker.ready_to_fire = false
 		if target.hp <= 0:
-			print("target destroed")
+			destroy_ship(target_index)
+
+@rpc("any_peer", "call_local")
+func destroy_ship(ship_index):
+	print(ships[ship_index])
+	var ship = ships.pop_at(ship_index)
+	ship.queue_free()
+	print("target destroed ", multiplayer.get_remote_sender_id())
+
 
 @rpc("any_peer", "call_local")
 func start_game():

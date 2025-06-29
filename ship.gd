@@ -2,10 +2,11 @@ extends MeshInstance3D
 
 class_name Ship
 
+@export var mesh_for_select: MeshInstance3D
 
 
 var hp = 10
-var damage = 4
+var damage = 10
 var movement_range = 4
 var attack_range = 5
 
@@ -38,7 +39,9 @@ func move(new_position: Vector3):
 	elif $"..".hex_size.x * movement_range < (position - new_position).length():
 		return
 	else:
-		position = new_position
+		look_at(new_position)
+		rotation.x = 0
+		position = new_position + Vector3.UP / 8
 		ready_to_move = false
 
 @rpc("any_peer", "call_local")
