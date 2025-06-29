@@ -17,7 +17,7 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	if not is_multiplayer_authority(): return
-	Input.mouse_mode = Input.MOUSE_MODE_CONFINED
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	camera.current = true
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -35,6 +35,9 @@ func _physics_process(delta: float) -> void:
 	
 	if Input.is_action_just_pressed("Alt"):
 		alt = (int(alt) + 1) % 2
+		if alt:
+			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		else: Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		
 
 	if Input.is_action_just_pressed("click") and raycast_permition:
@@ -55,7 +58,7 @@ func _physics_process(delta: float) -> void:
 					selected_hex = raycast_result.collider.get_parent()
 					selected_hex.got_clicked()
 					var ship_index = $"..".ships.find(selected_ship)
-					$"..".move_ship.rpc(ship_index, selected_hex.position)
+					$"..".move_ship.rpc(ship_index, selected_hex.get_index_in_hex_list())
 				if raycast_result.collider.get_parent() is Ship:
 					var attacker_index = $"..".ships.find(selected_ship)
 					var targert_index = $"..".ships.find(raycast_result.collider.get_parent())
@@ -101,7 +104,8 @@ func ray_cast():
 func _on_option_button_item_selected(index: int) -> void:
 	if selected_hex != null:
 		request_create_ship.rpc_id(1, $"..".hex_list.find(selected_hex), index, str(name).to_int())
-	$CanvasLayer/ActionPanel/MarginContainer/VBoxContainer/OptionButton.selected = -1
+	$CanvasLayer/ActionPanel/MarginContainer/VBoxContainer/OptionButton.selected = 3
+	
 
 
 

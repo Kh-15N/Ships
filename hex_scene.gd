@@ -11,6 +11,7 @@ var srart_pos = self.position
 var material_for_selected: Material
 
 var is_ship_on_hex = false
+var index = null
 
 func _enter_tree():
 	reset_selection()
@@ -20,9 +21,14 @@ func _enter_tree():
 func reset_selection():
 	set_surface_override_material(1, get_active_material(0))
 
-@rpc("call_local", "any_peer")
 func got_clicked():
 	if currently_selected:
 		currently_selected.reset_selection()
 	currently_selected = self
 	set_surface_override_material(1, material_for_selected)
+
+func set_index_in_hex_list(index):
+	self.index = index
+
+func get_index_in_hex_list():
+	return index
