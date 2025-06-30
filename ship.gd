@@ -46,10 +46,8 @@ func move(new_position: Vector3):
 
 @rpc("any_peer", "call_local")
 func set_team_color():
-	print("set_color")
 	#if multiplayer.get_remote_sender_id() != team:
 		#return
 	var team_index = $"..".players.find(team)
-	print($"..".players," ",  multiplayer.get_remote_sender_id()," ",  team)
 	for i in range(30):
 		set_surface_override_material(i, $"..".team_colors[team_index])

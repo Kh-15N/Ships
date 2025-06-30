@@ -27,8 +27,7 @@ var enet_peer = ENetMultiplayerPeer.new()
 var game_started = false
 
 func _enter_tree() -> void:
-	if multiplayer.is_server():
-		gen_hex_field()
+	gen_hex_field()
 	
 
 func  _unhandled_input(event: InputEvent) -> void:
@@ -50,14 +49,14 @@ func gen_hex_field():
 				(hex_size.z / 1.4) * z
 			) 
 
-func _on_host_button_pressed() -> void:
-	main_menu.hide()
-	enet_peer.create_server(PORT)
-	multiplayer.multiplayer_peer = enet_peer
-	multiplayer.peer_connected.connect(add_player.rpc)
-	multiplayer.peer_connected.disconnect(remove_player)
-	add_player(multiplayer.get_unique_id())
-	
+#func _on_host_button_pressed() -> void:
+	#main_menu.hide()
+	#enet_peer.create_server(PORT)
+	#multiplayer.multiplayer_peer = enet_peer
+	#multiplayer.peer_connected.connect(add_player.rpc)
+	#multiplayer.peer_connected.disconnect(remove_player)
+	#add_player(multiplayer.get_unique_id())
+	#
 	
 
 func _on_join_button_pressed() -> void:
@@ -65,15 +64,15 @@ func _on_join_button_pressed() -> void:
 	enet_peer.create_client(address_entry.text, PORT)
 	multiplayer.multiplayer_peer = enet_peer
 
-@rpc("any_peer", "call_local")
+@rpc("authority", "call_local")
 func add_player(peer_id):
 	var player = Player.instantiate()
 	player.name = str(peer_id)
 	players.append(peer_id)
 	add_child(player)
 	player.position = $Players.position
-	if not multiplayer.is_server():
-		spawn_objects_request.rpc_id(1, multiplayer.get_unique_id())
+	if multiplayer.get_unique_id() == peer_id:
+		spawn_objects_request.rpc_id(1, peer_id)
 
 func remove_player(peer_id):
 	var player = get_node_or_null(str(peer_id))
@@ -150,6 +149,7 @@ func attack(attacker_index, target_index):
 		print("По своим стреляешь!")
 		return
 	if attacker.ready_to_fire: #добавь проверку дальности
+		play_sound_of_shot()
 		target.hp -= attacker.damage
 		attacker.ready_to_fire = false
 		if target.hp <= 0:
@@ -185,3 +185,9 @@ func end_turn():
 
 func _on_button_pressed() -> void:
 	start_game.rpc()
+
+func play_sound_of_shot():
+	var sound = AudioStreamPlayer.new()
+	sound.stream = load("res://sounds/sound_of_shot(metal_pipe_sound).mp3")
+	add_child(sound)
+	sound.play()
