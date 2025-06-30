@@ -1,0 +1,121 @@
+[gd_scene load_steps=8 format=3 uid="uid://q7m2qqjlrico"]
+
+[ext_resource type="Script" path="res://world.gd" id="1_hw18t"]
+[ext_resource type="Material" uid="uid://dmhv3mq6xsxyi" path="res://green.tres" id="2_qkdqv"]
+[ext_resource type="Material" uid="uid://c1mkf4wsgf0sx" path="res://water.tres" id="3_8wv14"]
+[ext_resource type="PackedScene" uid="uid://ch8cdiyf5fipo" path="res://hex_scene.tscn" id="4_njk2u"]
+[ext_resource type="PackedScene" uid="uid://8r52mau04p63" path="res://ship.tscn" id="5_rgusp"]
+[ext_resource type="Environment" uid="uid://d2hlbp0v3mru" path="res://world_enviroment.tres" id="6_t34l5"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_7d3tr"]
+size = Vector2(10, 10)
+
+[node name="World" type="Node"]
+script = ExtResource("1_hw18t")
+color_1 = ExtResource("2_qkdqv")
+color_2 = ExtResource("3_8wv14")
+hex_scene = ExtResource("4_njk2u")
+ship_scene = ExtResource("5_rgusp")
+size = 100
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_7d3tr")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.0719848, 0.997406, 0, -0.997406, -0.0719848, -0.0213585, 14.7025, 0.0643902)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("6_t34l5")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="MainMenu" type="PanelContainer" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 238.0
+offset_top = 139.0
+offset_right = -238.0
+offset_bottom = -139.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/MainMenu"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MainMenu/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Label" type="Label" parent="CanvasLayer/MainMenu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Главное меню"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HostButton" type="Button" parent="CanvasLayer/MainMenu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Хост"
+
+[node name="JoinButton" type="Button" parent="CanvasLayer/MainMenu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Подключиться"
+
+[node name="AddeessEntry" type="LineEdit" parent="CanvasLayer/MainMenu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "localhost"
+placeholder_text = "Адрес"
+
+[node name="TurnCounter" type="MarginContainer" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 984.0
+offset_bottom = -581.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/TurnCounter"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/TurnCounter/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/TurnCounter/MarginContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+text = "Ход игрока (по id):"
+
+[node name="TurnLabel" type="Label" parent="CanvasLayer/TurnCounter/MarginContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+text = "
+"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="CanvasLayer/TurnCounter/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Начать игру"
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://player.tscn")
+spawn_path = NodePath("..")
+
+[node name="Players" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 10, 10)
+
+[node name="Hex_scene" parent="." instance=ExtResource("4_njk2u")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.32007, 0, -9.01858)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.0308176, 0.999525, 0, -0.999525, 0.0308176, -220.654, 29.4238, 104.796)
+light_energy = 5.3
+
+[connection signal="pressed" from="CanvasLayer/MainMenu/MarginContainer/VBoxContainer/HostButton" to="." method="_on_host_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainMenu/MarginContainer/VBoxContainer/JoinButton" to="." method="_on_join_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/TurnCounter/MarginContainer/VBoxContainer/Button" to="." method="_on_button_pressed"]
