@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://citho41yet7u7"]
 
-[ext_resource type="Script" path="res://level.gd" id="1_p4gvl"]
+[ext_resource type="Script" path="res://мусор/level.gd" id="1_p4gvl"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_s66iy"]
 
