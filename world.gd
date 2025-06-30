@@ -97,7 +97,18 @@ func add_player(peer_id):
 func remove_player(peer_id):
 	var player = get_node_or_null(str(peer_id))
 	if player:
+		var end_prt = ships.size() - 1
+		var ship_index = 0
+		while ship_index <= end_prt:
+			if ships[ship_index].team == peer_id:
+				ships[ship_index].queue_free()
+				ships.pop_at(ship_index)
+				end_prt -= 1
+			else:
+				ship_index += 1
 		player.queue_free()
+		players.pop_at(players.find(peer_id))
+		
 
 @rpc("any_peer", "call_remote")
 func spawn_objects_request(self_id):
