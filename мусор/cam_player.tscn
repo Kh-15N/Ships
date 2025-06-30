@@ -1,9 +1,9 @@
 [gd_scene load_steps=8 format=3 uid="uid://drpe8ud47f41l"]
 
-[ext_resource type="Script" path="res://cam_player.gd" id="1_w725y"]
-[ext_resource type="Script" path="res://multiplayer_synchronizer.gd" id="2_irw8o"]
-[ext_resource type="Script" path="res://cam_ui.gd" id="3_7qigs"]
-[ext_resource type="Script" path="res://input_syncronizer.gd" id="3_fdr2r"]
+[ext_resource type="Script" path="res://мусор/cam_player.gd" id="1_w725y"]
+[ext_resource type="Script" path="res://мусор/multiplayer_synchronizer.gd" id="2_irw8o"]
+[ext_resource type="Script" path="res://мусор/cam_ui.gd" id="3_7qigs"]
+[ext_resource type="Script" path="res://мусор/input_syncronizer.gd" id="3_fdr2r"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_sjakr"]
 properties/0/path = NodePath("..:position")

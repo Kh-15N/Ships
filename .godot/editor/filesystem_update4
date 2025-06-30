@@ -1,0 +1,12 @@
+res://multiplayer.tscn
+res://fu_test.tscn
+res://player.tscn
+res://ship.gd
+res://ship.tscn
+res://мусор/multiplayer.tscn
+res://hex_scene.gd
+res://hex_scene.tscn
+res://world_enviroment.tres
+res://fu_test.gd
+res://water.gdshader
+res://player.gd
