@@ -13,6 +13,7 @@ var attack_range = 5
 var team
 var ready_to_move = true
 var ready_to_fire = true
+var hex_under_ship = null # номер гекса в hex_list у главной сцены
 
 
 func _ready() -> void:
@@ -27,6 +28,7 @@ func get_property_dict():
 	"team": team,
 	"ready_to_move": ready_to_move,
 	"ready_to_fire": ready_to_fire,
+	"hex_under_ship": hex_under_ship
 	}
 	return property_dict
 	
@@ -46,10 +48,8 @@ func move(new_position: Vector3):
 
 @rpc("any_peer", "call_local")
 func set_team_color():
-	print("set_color")
 	#if multiplayer.get_remote_sender_id() != team:
 		#return
 	var team_index = $"..".players.find(team)
-	print($"..".players," ",  multiplayer.get_remote_sender_id()," ",  team)
 	for i in range(30):
 		set_surface_override_material(i, $"..".team_colors[team_index])
