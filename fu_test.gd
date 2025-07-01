@@ -11,8 +11,9 @@ extends Node
 @export var size: int = 10
 
 var team_colors: Array[StandardMaterial3D] = [
-	preload("res://green.tres"),
-	preload("res://water.tres") # Динамически созданный материал
+	preload("res://shaders_and_materials/green.tres"),
+	preload("res://shaders_and_materials/german_red_brown.tres")
+	
 ]
 var hex_list = []
 var ships = []
@@ -102,7 +103,9 @@ func create_ship(hex_index, type, team):
 	# нужно будет сделать выбор типа
 	add_child(ship)
 	ship.set_team_color.rpc()
+	ship.hex_under_ship = hex_index
 	ship.position = hex_list[hex_index].position + Vector3.UP / 8
+	hex_list[hex_index].is_ship_on_hex = true
 	
 
 @rpc("authority", "call_remote")
@@ -117,25 +120,26 @@ func replikate_ship(ship_image_properties: Dictionary, ship_image_transform):
 	ship.ready_to_move = ship_image_properties["ready_to_move"]
 	ship.ready_to_fire = ship_image_properties["ready_to_fire"]
 	ship.transform = ship_image_transform
+	ship.hex_under_ship = ship_image_properties["hex_under_ship"]
+	hex_list[ship.hex_under_ship].is_ship_on_hex = true
 	add_child(ship)
 	ship.set_team_color.rpc()
 
 @rpc("authority", "call_remote")
 func tell_about_players(spawned_players):
 	players = spawned_players
-	# Нужно ли это? 
-	## вот тут костыль, нужен персонаж игрока, а он спавнится воследним
-	#get_children()[-1].label.material = team_colors[players.find(str(name).to_int())] 
-	#print(get_children()[-1].label)
-	##CanvasLayer/ActionPanel/MarginContainer/VBoxContainer/Label
 
-@rpc("any_peer", "call_local")
+@rpc("any_peer", "call_local", "reliable")
 func move_ship(ship_index, hex_index):
+	var ship = ships[ship_index]
 	if game_started and multiplayer.get_remote_sender_id() != players[turn]:
 		return
-	if multiplayer.get_remote_sender_id() != ships[ship_index].team:
+	if multiplayer.get_remote_sender_id() != ship.team:
 		return
-	ships[ship_index].move(hex_list[hex_index].position)
+	ship.move(hex_list[hex_index].position)
+	hex_list[ship.hex_under_ship].is_ship_on_hex = false
+	ship.hex_under_ship = hex_index
+	hex_list[ship.hex_under_ship].is_ship_on_hex = true
 
 @rpc("any_peer", "call_local")
 func attack(attacker_index, target_index):
@@ -159,6 +163,7 @@ func attack(attacker_index, target_index):
 func destroy_ship(ship_index):
 	print(ships[ship_index])
 	var ship = ships.pop_at(ship_index)
+	hex_list[ship.hex_under_ship].is_ship_on_hex = false
 	ship.queue_free()
 	print("target destroed ", multiplayer.get_remote_sender_id())
 
