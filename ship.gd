@@ -13,6 +13,7 @@ var attack_range = 5
 var team
 var ready_to_move = true
 var ready_to_fire = true
+var hex_under_ship = null # номер гекса в hex_list у главной сцены
 
 
 func _ready() -> void:
@@ -27,6 +28,7 @@ func get_property_dict():
 	"team": team,
 	"ready_to_move": ready_to_move,
 	"ready_to_fire": ready_to_fire,
+	"hex_under_ship": hex_under_ship
 	}
 	return property_dict
 	

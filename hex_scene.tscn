@@ -1,7 +1,7 @@
 [gd_scene load_steps=17 format=3 uid="uid://ch8cdiyf5fipo"]
 
 [ext_resource type="ArrayMesh" uid="uid://ow1a7wu0l1o" path="res://hex.obj" id="1_dochu"]
-[ext_resource type="Shader" path="res://water.gdshader" id="2_f5cmx"]
+[ext_resource type="Shader" path="res://shaders_and_materials/water.gdshader" id="2_f5cmx"]
 [ext_resource type="Script" path="res://hex_scene.gd" id="3_ylrcb"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_arwhu"]
