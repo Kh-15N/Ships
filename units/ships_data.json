@@ -1,0 +1,16 @@
+{
+	"destroer": {
+		"hp": 2,
+		"damage": 1,
+		"movement_range": 5,
+		"attack_range": 3,
+		"model_path": "res://units/destroer.tscn"
+	},
+	"battle_cruiser": {
+		"hp": 5,
+		"damage": 4,
+		"movement_range": 4,
+		"attack_range": 5,
+		"model_path": "res://units/battle_cruiser.tscn"
+	}
+}

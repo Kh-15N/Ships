@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://cx2qyn02ald5p"]
 
-[ext_resource type="Script" path="res://player.gd" id="1_k3eb7"]
-[ext_resource type="Script" path="res://action_panel.gd" id="2_8ip1l"]
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_febh7"]
+[ext_resource type="Script" path="res://scripts/action_panel.gd" id="2_a78in"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_dlat2"]
 
@@ -19,7 +19,7 @@ properties/2/replication_mode = 1
 [node name="Player" type="CharacterBody3D"]
 collision_layer = 2
 collision_mask = 2
-script = ExtResource("1_k3eb7")
+script = ExtResource("1_febh7")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.20759, 0)
@@ -44,7 +44,7 @@ offset_top = -3.88004
 grow_horizontal = 0
 grow_vertical = 0
 mouse_filter = 1
-script = ExtResource("2_8ip1l")
+script = ExtResource("2_a78in")
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/ActionPanel"]
 layout_mode = 2
@@ -70,14 +70,14 @@ icon_alignment = 1
 expand_icon = true
 selected = 3
 item_count = 4
-popup/item_0/text = "Эсминец"
-popup/item_1/text = "Крейсер"
+popup/item_0/text = "Создать корабль"
+popup/item_0/disabled = true
+popup/item_1/text = "Эсминец"
 popup/item_1/id = 1
-popup/item_2/text = "Линейный крейсер"
+popup/item_2/text = "Крейсер"
 popup/item_2/id = 2
-popup/item_3/text = "Создать корабль"
+popup/item_3/text = "Линейный крейсер"
 popup/item_3/id = 3
-popup/item_3/disabled = true
 
 [node name="Label" type="Label" parent="CanvasLayer/ActionPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
