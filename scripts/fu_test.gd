@@ -95,14 +95,15 @@ func spawn_objects(id):
 # request_create_ship должна срабатывать только на сервере
 @rpc("any_peer", "call_local", "reliable")
 func request_create_ship(pos, type, team):
-	if multiplayer.is_server():
-		print("какого хуя?")
-		var ships_data: Dictionary # код-заглушка
-		create_ship.rpc(pos, ships_data.get(type), team)
+	if not multiplayer.is_server():
+		pass
+
 
 @rpc("authority", "call_local")
 func create_ship(hex_index, type_data: Dictionary, team):
 	if game_started and players[turn] != team: # можно создавать корабли в процессе игры
+		return
+	if hex_list[hex_index].is_ship_on_hex:
 		return
 	var ship: Ship = ship_scene.instantiate()
 	ships.append(ship)
