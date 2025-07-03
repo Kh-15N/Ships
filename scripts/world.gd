@@ -132,9 +132,7 @@ func spawn_objects(id):
 	
 @rpc("any_peer", "call_local", "reliable")
 func request_create_ship(pos, type, team):
-	print('request_create_ship called')
 	if multiplayer.is_server():
-		print(ships_data, type)
 		create_ship.rpc(pos, ships_data.get(type), team)
 	
 @rpc("authority", "call_local")
@@ -211,7 +209,6 @@ func attack(attacker_index, target_index):
 
 @rpc("any_peer", "call_local")
 func destroy_ship(ship_index):
-	print(ships[ship_index])
 	var ship = ships.pop_at(ship_index)
 	hex_list[ship.hex_under_ship].is_ship_on_hex = false
 	ship.queue_free()
