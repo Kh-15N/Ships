@@ -108,6 +108,7 @@ func remove_player(peer_id):
 		var ship_index = 0
 		while ship_index <= end_prt:
 			if ships[ship_index].team == peer_id:
+				hex_list[ships[ship_index].hex_under_ship].is_ship_on_hex = false
 				ships[ship_index].queue_free()
 				ships.pop_at(ship_index)
 				end_prt -= 1
@@ -140,11 +141,11 @@ func request_create_ship(pos, type, team):
 func create_ship(hex_index, type_data: Dictionary, team):
 	if game_started and players[turn] != team: # можно создавать корабли в процессе игры
 		return
-	print(type_data)
+	if hex_list[hex_index].is_ship_on_hex:
+		return
 	var ship: Ship = ship_scene.instantiate()
 	ships.append(ship)
 	ship.team = team
-	print(type_data)
 	ship.setup(type_data)
 	add_child(ship)
 	ship.set_team_color.rpc()
