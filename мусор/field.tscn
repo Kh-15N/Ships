@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://mykpkwtxfw8t"]
 
 [ext_resource type="Script" path="res://мусор/field.gd" id="1_dmjti"]
-[ext_resource type="PackedScene" uid="uid://ch8cdiyf5fipo" path="res://hex_scene.tscn" id="2_wma0k"]
-[ext_resource type="PackedScene" uid="uid://8r52mau04p63" path="res://ship.tscn" id="3_qrhj6"]
+[ext_resource type="PackedScene" uid="uid://ch8cdiyf5fipo" path="res://scenes/hex_scene.tscn" id="2_wma0k"]
+[ext_resource type="PackedScene" uid="uid://8r52mau04p63" path="res://scenes/ship.tscn" id="3_qrhj6"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_6ogyn"]
 size = Vector2(10, 10)

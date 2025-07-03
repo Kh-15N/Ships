@@ -21,7 +21,7 @@ var players = []
 var turn = 0 # индекс игрока в players
 var hex_size
 
-const Player = preload("res://player.tscn")
+const Player = preload("res://scenes/player.tscn")
 const PORT = 8080
 var enet_peer = ENetMultiplayerPeer.new()
 
@@ -91,16 +91,23 @@ func spawn_objects(id):
 	tell_about_players.rpc_id(id, players)
 	for ship in ships:
 		replikate_ship.rpc_id(id, ship.get_property_dict(), ship.transform)
-	
-	
+
+# request_create_ship должна срабатывать только на сервере
+@rpc("any_peer", "call_local", "reliable")
+func request_create_ship(pos, type, team):
+	if multiplayer.is_server():
+		print("какого хуя?")
+		var ships_data: Dictionary # код-заглушка
+		create_ship.rpc(pos, ships_data.get(type), team)
+
 @rpc("authority", "call_local")
-func create_ship(hex_index, type, team):
+func create_ship(hex_index, type_data: Dictionary, team):
 	if game_started and players[turn] != team: # можно создавать корабли в процессе игры
 		return
 	var ship: Ship = ship_scene.instantiate()
 	ships.append(ship)
 	ship.team = team
-	# нужно будет сделать выбор типа
+	ship.setup(type_data)
 	add_child(ship)
 	ship.set_team_color.rpc()
 	ship.hex_under_ship = hex_index
@@ -121,8 +128,11 @@ func replikate_ship(ship_image_properties: Dictionary, ship_image_transform):
 	ship.ready_to_fire = ship_image_properties["ready_to_fire"]
 	ship.transform = ship_image_transform
 	ship.hex_under_ship = ship_image_properties["hex_under_ship"]
+	ship.model_path = ship_image_properties.get("model_path")
 	hex_list[ship.hex_under_ship].is_ship_on_hex = true
 	add_child(ship)
+	var model = load(ship.model_path).instantiate()
+	ship.add_child(model)
 	ship.set_team_color.rpc()
 
 @rpc("authority", "call_remote")
@@ -152,12 +162,13 @@ func attack(attacker_index, target_index):
 	if attacker.team == target.team:
 		print("По своим стреляешь!")
 		return
-	if attacker.ready_to_fire: #добавь проверку дальности
-		play_sound_of_shot()
-		target.hp -= attacker.damage
-		attacker.ready_to_fire = false
-		if target.hp <= 0:
-			destroy_ship(target_index)
+	if attacker.ready_to_fire:
+		if (attacker.position - target.position).length() < hex_size.x * attacker.attack_range:
+			play_sound_of_shot()
+			target.hp -= attacker.damage
+			attacker.ready_to_fire = false
+			if target.hp <= 0:
+				destroy_ship(target_index)
 
 @rpc("any_peer", "call_local")
 func destroy_ship(ship_index):

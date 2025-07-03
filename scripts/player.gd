@@ -7,6 +7,7 @@ const SPEED = 20.0
 
 var selected_hex = null
 var selected_ship = null
+var ship_types = ["destroer", "cruiser", "battle_cruiser", "battle_ship"]
 
 var alt = false
 var raycast_permition = true
@@ -47,8 +48,8 @@ func _physics_process(delta: float) -> void:
 				#print(raycast_result.collider.get_parent())
 				selected_hex = raycast_result.collider.get_parent()
 				selected_hex.got_clicked()
-			if raycast_result.collider.get_parent() is Ship:
-				selected_ship = raycast_result.collider.get_parent()
+			if raycast_result.collider.get_parent().get_parent() is Ship:
+				selected_ship = raycast_result.collider.get_parent().get_parent()
 	if Input.is_action_just_pressed("move_or_attack"):
 		if selected_ship != null:
 			var raycast_result = ray_cast()
@@ -59,9 +60,9 @@ func _physics_process(delta: float) -> void:
 					selected_hex.got_clicked()
 					var ship_index = $"..".ships.find(selected_ship)
 					$"..".move_ship.rpc(ship_index, selected_hex.get_index_in_hex_list())
-				if raycast_result.collider.get_parent() is Ship:
+				if raycast_result.collider.get_parent().get_parent() is Ship:
 					var attacker_index = $"..".ships.find(selected_ship)
-					var targert_index = $"..".ships.find(raycast_result.collider.get_parent())
+					var targert_index = $"..".ships.find(raycast_result.collider.get_parent().get_parent())
 					$"..".attack.rpc(attacker_index, targert_index)
 
 	# Get the input direction and handle the movement/deceleration.
@@ -91,9 +92,7 @@ func ray_cast():
 
 	var result = space_state.intersect_ray(query)
 	if result != { }:
-		if result.collider.get_parent() is Ship:
-			print(result.collider.get_parent(), " ", result.collider.get_parent().hp, " ", result.collider.get_parent().team)
-		else: print(result.collider.get_parent())
+		print(result.collider.get_parent())
 	else:
 		print("not hit")
 	return result
@@ -103,10 +102,13 @@ func ray_cast():
 
 func _on_option_button_item_selected(index: int) -> void:
 	if selected_hex != null:
-		request_create_ship.rpc_id(1, $"..".hex_list.find(selected_hex), index, str(name).to_int())
-	$CanvasLayer/ActionPanel/MarginContainer/VBoxContainer/OptionButton.selected = 3
-	
+		if index != 0:
+			var type = transform_index_to_type(index - 1)
+			$"..".request_create_ship.rpc_id(1, $"..".hex_list.find(selected_hex), type, str(name).to_int())
+	$CanvasLayer/ActionPanel/MarginContainer/VBoxContainer/OptionButton.selected = 0
 
+func transform_index_to_type(index: int):
+	return ship_types[index]
 
 
 func _on_action_panel_mouse_entered() -> void:
@@ -117,12 +119,6 @@ func _on_action_panel_mouse_exited() -> void:
 	if not $CanvasLayer/ActionPanel.get_global_rect().has_point(get_viewport().get_mouse_position()):
 		raycast_permition = true
 
-@rpc("any_peer", "call_local", "reliable")
-func request_create_ship(pos, type, team):
-	if multiplayer.is_server():
-		$"..".create_ship.rpc(pos, type, team)
-
-	
 
 
 func _on_button_pressed() -> void:

@@ -1,10 +1,10 @@
 [gd_scene load_steps=8 format=3 uid="uid://q7m2qqjlrico"]
 
-[ext_resource type="Script" path="res://fu_test.gd" id="1_hdrd3"]
-[ext_resource type="PackedScene" uid="uid://ch8cdiyf5fipo" path="res://hex_scene.tscn" id="2_je7og"]
+[ext_resource type="Script" path="res://scripts/fu_test.gd" id="1_hdrd3"]
+[ext_resource type="PackedScene" uid="uid://ch8cdiyf5fipo" path="res://scenes/hex_scene.tscn" id="2_je7og"]
 [ext_resource type="Material" uid="uid://dmhv3mq6xsxyi" path="res://shaders_and_materials/green.tres" id="2_q4k1m"]
-[ext_resource type="PackedScene" uid="uid://8r52mau04p63" path="res://ship.tscn" id="3_khfok"]
 [ext_resource type="Material" uid="uid://bmwpl7mkpw8hp" path="res://shaders_and_materials/german_red_brown.tres" id="3_waoas"]
+[ext_resource type="PackedScene" uid="uid://bbg03lbi6v3xt" path="res://scenes/base_ship.tscn" id="5_ds4u5"]
 [ext_resource type="Environment" uid="uid://d2hlbp0v3mru" path="res://shaders_and_materials/world_enviroment.tres" id="6_fnngw"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_7d3tr"]
@@ -15,7 +15,7 @@ script = ExtResource("1_hdrd3")
 color_1 = ExtResource("2_q4k1m")
 color_2 = ExtResource("3_waoas")
 hex_scene = ExtResource("2_je7og")
-ship_scene = ExtResource("3_khfok")
+ship_scene = ExtResource("5_ds4u5")
 size = 100
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
@@ -102,7 +102,6 @@ layout_mode = 2
 text = "Начать игру"
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://player.tscn")
 spawn_path = NodePath("..")
 
 [node name="Players" type="Node3D" parent="."]
