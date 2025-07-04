@@ -52,7 +52,7 @@ func _on_peer_connected(player_id):
 	print("Игрок подключен: ", player_id)
 
 func _on_peer_disconnected(player_id):
-	remove_player(player_id)
+	remove_player.rpc(player_id)
 	print("Игрок отключился: ", player_id)
 
 
@@ -101,6 +101,7 @@ func add_player(peer_id):
 	if multiplayer.get_unique_id() == peer_id:
 		spawn_objects_request.rpc_id(1, peer_id)
 
+@rpc("authority", "call_local", "reliable")
 func remove_player(peer_id):
 	var player = get_node_or_null(str(peer_id))
 	if player:

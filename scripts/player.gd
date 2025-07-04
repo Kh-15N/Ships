@@ -48,6 +48,7 @@ func _physics_process(delta: float) -> void:
 				#print(raycast_result.collider.get_parent())
 				selected_hex = raycast_result.collider.get_parent()
 				selected_hex.got_clicked()
+				selected_ship = null
 			if raycast_result.collider.get_parent().get_parent() is Ship:
 				selected_ship = raycast_result.collider.get_parent().get_parent()
 	if Input.is_action_just_pressed("move_or_attack"):
