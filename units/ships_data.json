@@ -6,11 +6,25 @@
 		"attack_range": 3,
 		"model_path": "res://units/destroer.tscn"
 	},
+	"cruiser": {
+		"hp": 4,
+		"damage": 2,
+		"movement_range": 5,
+		"attack_range": 3,
+		"model_path": "res://units/cruiser.tscn"
+	},
 	"battle_cruiser": {
-		"hp": 5,
+		"hp": 9,
 		"damage": 4,
 		"movement_range": 4,
 		"attack_range": 5,
 		"model_path": "res://units/battle_cruiser.tscn"
+	},
+	"battle_ship": {
+		"hp": 15,
+		"damage": 4,
+		"movement_range": 2,
+		"attack_range": 5,
+		"model_path": "res://units/battle_ship.tscn"
 	}
 }
