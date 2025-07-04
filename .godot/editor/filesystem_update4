@@ -8,3 +8,4 @@ res://scenes/base_ship.tscn
 res://scripts/base_ship.gd
 res://scripts/player.gd
 res://scripts/fu_test.gd
+res://units/battle_ship.tscn

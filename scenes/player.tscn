@@ -70,7 +70,7 @@ flat = true
 icon_alignment = 1
 expand_icon = true
 selected = 0
-item_count = 4
+item_count = 5
 popup/item_0/text = "Создать корабль"
 popup/item_0/disabled = true
 popup/item_1/text = "Эсминец"
@@ -79,6 +79,8 @@ popup/item_2/text = "Крейсер"
 popup/item_2/id = 2
 popup/item_3/text = "Линейный крейсер"
 popup/item_3/id = 3
+popup/item_4/text = "Линкор"
+popup/item_4/id = 4
 
 [node name="Label" type="Label" parent="CanvasLayer/ActionPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
