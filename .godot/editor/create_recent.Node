@@ -1,3 +1,9 @@
+Label
+VBoxContainer
+HBoxContainer
+GridContainer
+ItemList
+MarginContainer
+PanelContainer
 SpotLight3D
 WorldEnvironment
-Label

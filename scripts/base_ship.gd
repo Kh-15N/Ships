@@ -56,3 +56,6 @@ func set_team_color():
 	var team_index = $"..".players.find(team)
 	for i in range(30):
 		get_children()[1].set_surface_override_material(i, $"..".team_colors[team_index])
+
+func get_prop_for_ui():
+	return [hp, damage, ready_to_move, ready_to_fire, movement_range, attack_range]

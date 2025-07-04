@@ -2,6 +2,7 @@ extends CharacterBody3D
 
 @onready var camera= $Camera3D
 @onready var label = $CanvasLayer/ActionPanel/MarginContainer/VBoxContainer/Label
+@onready var info_lables = $CanvasLayer/InfoPanel/MarginContainer/HBoxContainer/InfoColum.get_children()
 
 const SPEED = 20.0
 
@@ -48,6 +49,7 @@ func _physics_process(delta: float) -> void:
 				#print(raycast_result.collider.get_parent())
 				selected_hex = raycast_result.collider.get_parent()
 				selected_hex.got_clicked()
+				selected_ship = null
 			if raycast_result.collider.get_parent().get_parent() is Ship:
 				selected_ship = raycast_result.collider.get_parent().get_parent()
 	if Input.is_action_just_pressed("move_or_attack"):
@@ -77,6 +79,12 @@ func _physics_process(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 		velocity.z = move_toward(velocity.z, 0, SPEED)
 		velocity.y = move_toward(velocity.y, 0, SPEED)
+	
+	
+	if selected_ship != null:
+		$CanvasLayer/InfoPanel.visible = true
+		update_info_about_ship()
+	else: $CanvasLayer/InfoPanel.visible = false
 
 	move_and_slide()
 
@@ -123,3 +131,9 @@ func _on_action_panel_mouse_exited() -> void:
 
 func _on_button_pressed() -> void:
 	$"..".end_turn.rpc()
+
+
+func update_info_about_ship():
+	var selected_ship_props = selected_ship.get_prop_for_ui()
+	for i in  range(len(selected_ship_props)):
+		info_lables[i].text = str(selected_ship_props[i])
