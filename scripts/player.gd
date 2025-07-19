@@ -61,11 +61,11 @@ func _physics_process(delta: float) -> void:
 					selected_hex = raycast_result.collider.get_parent()
 					selected_hex.got_clicked()
 					var ship_index = $"..".ships.find(selected_ship)
-					$"..".move_ship.rpc(ship_index, selected_hex.get_index_in_hex_list())
+					$"..".request_to_move_ship.rpc_id(1, ship_index, selected_hex.get_index_in_hex_list())
 				if raycast_result.collider.get_parent().get_parent() is Ship:
 					var attacker_index = $"..".ships.find(selected_ship)
 					var targert_index = $"..".ships.find(raycast_result.collider.get_parent().get_parent())
-					$"..".attack.rpc(attacker_index, targert_index)
+					$"..".request_to_attack.rpc_id(1, attacker_index, targert_index)
 
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.

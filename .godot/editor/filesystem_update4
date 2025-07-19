@@ -1,11 +1,9 @@
-res://scenes/player.tscn
+res://scenes/fu_test.tscn
 res://shaders_and_materials/water.gdshader
 res://shaders_and_materials/world_enviroment.tres
-res://scenes/fu_test.tscn
+res://scripts/fu_test.gd
+res://scenes/player.tscn
+res://scripts/player.gd
 res://scenes/hex_scene.tscn
 res://units/battle_cruiser.tscn
-res://scenes/base_ship.tscn
-res://scripts/base_ship.gd
-res://scripts/player.gd
-res://scripts/fu_test.gd
 res://units/battle_ship.tscn
