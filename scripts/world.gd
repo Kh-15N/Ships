@@ -136,7 +136,7 @@ func request_create_ship(pos, type, team):
 	if multiplayer.is_server():
 		create_ship.rpc(pos, ships_data.get(type), team)
 	
-@rpc("authority", "call_local")
+@rpc("authority", "call_local", "reliable")
 func create_ship(hex_index, type_data: Dictionary, team):
 	if game_started and players[turn] != team: # можно создавать корабли в процессе игры
 		return
@@ -153,7 +153,7 @@ func create_ship(hex_index, type_data: Dictionary, team):
 	hex_list[hex_index].is_ship_on_hex = true
 
 
-@rpc("authority", "call_remote")
+@rpc("authority", "call_remote", "reliable")
 func replikate_ship(ship_image_properties: Dictionary, ship_image_transform):
 	var ship: Ship = ship_scene.instantiate()
 	ships.append(ship)
@@ -178,21 +178,35 @@ func replikate_ship(ship_image_properties: Dictionary, ship_image_transform):
 func tell_about_players(spawned_players):
 	players = spawned_players
 
-@rpc("any_peer", "call_local", "reliable")
-func move_ship(ship_index, hex_index):
+@rpc("any_peer")
+func request_to_move_ship(ship_index, hex_index):
+	if ship_index >= len(ships):
+		print("ship_index больше длины списка ships")
+		return
 	var ship = ships[ship_index]
 	if game_started and multiplayer.get_remote_sender_id() != players[turn]:
 		return
 	if multiplayer.get_remote_sender_id() != ship.team:
 		return
-	ship.move(hex_list[hex_index].position)
-	hex_list[ship.hex_under_ship].is_ship_on_hex = false
-	ship.hex_under_ship = hex_index
-	hex_list[ship.hex_under_ship].is_ship_on_hex = true
+	move_ship.rpc(ship_index, hex_index)
 
-@rpc("any_peer", "call_local")
-func attack(attacker_index, target_index):
+
+@rpc("authority", "call_local", "reliable")
+func move_ship(ship_index, hex_index):
+		var ship = ships[ship_index]
+		ship.move(hex_list[hex_index].position)
+		hex_list[ship.hex_under_ship].is_ship_on_hex = false
+		ship.hex_under_ship = hex_index
+		hex_list[ship.hex_under_ship].is_ship_on_hex = true
+
+@rpc("any_peer")
+func request_to_attack(attacker_index, target_index):
+	print(request_to_attack)
 	if game_started and multiplayer.get_remote_sender_id() != players[turn]:
+		return
+	var last_index = len(ships) -1
+	if attacker_index > last_index or target_index > last_index:
+		print("ships index out of range")
 		return
 	var attacker = ships[attacker_index]
 	var target = ships[target_index]
@@ -201,14 +215,24 @@ func attack(attacker_index, target_index):
 	if attacker.team == target.team:
 		print("По своим стреляешь!")
 		return
+	if attacker.team == target.team:
+		print("По своим стреляешь!")
+		return
 	if attacker.ready_to_fire:
 		if (attacker.position - target.position).length() < hex_size.x * attacker.attack_range:
-			target.hp -= attacker.damage
-			attacker.ready_to_fire = false
-			if target.hp <= 0:
-				destroy_ship(target_index)
+			attack.rpc(attacker_index, target_index)
 
-@rpc("any_peer", "call_local")
+@rpc("authority", "call_local")
+func attack(attacker_index, target_index):
+	print("attack on server")
+	var attacker = ships[attacker_index]
+	var target = ships[target_index]
+	target.hp -= attacker.damage
+	attacker.ready_to_fire = false
+	if target.hp <= 0:
+		destroy_ship.rpc(target_index)
+
+@rpc("authority", "call_local", "reliable")
 func destroy_ship(ship_index):
 	var ship = ships.pop_at(ship_index)
 	hex_list[ship.hex_under_ship].is_ship_on_hex = false

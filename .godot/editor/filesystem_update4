@@ -1,11 +1,11 @@
 res://scenes/world.tscn
 res://shaders_and_materials/water.gdshader
 res://shaders_and_materials/world_enviroment.tres
-res://units/ships_data.json
-res://units/cruiser.tscn
+res://scripts/world.gd
 res://scenes/player.tscn
 res://scenes/hex_scene.tscn
 res://scenes/base_ship.tscn
 res://units/battle_cruiser.tscn
 res://units/destroer.tscn
 res://units/battle_ship.tscn
+res://units/cruiser.tscn
